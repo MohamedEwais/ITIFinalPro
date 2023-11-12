@@ -7,6 +7,7 @@ use App\Models\Proposal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class ProposalController extends Controller
 {
@@ -39,19 +40,21 @@ class ProposalController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+        $request->merge(['user_id' => $user->id]);
         // Create a new proposal
         $validator = Validator::make($request->all() ,
         [
             'img' => 'required',
             'budget' => 'required|numeric',
             'comment' => 'required',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'integer',
             'job_id' => 'required|exists:jobs,id',
         ],[
             'img.required' => 'برجاء ارفاق صورة',
             'budget.required' => 'برجاء كتابه الميزانية',
             'comment.required'=> 'هذا الحقل مطلوب',
-            'user_id' => 'required|integer',
+            'user_id' => $user->id,
             'job_id' => 'required|integer',
         ]);
 

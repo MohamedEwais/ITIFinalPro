@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProposalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,14 +95,23 @@ Route::post('/sanctum/token', function (Request $request) {
     ]);
  
     $user = User::where('email', $request->email)->first();
- 
+   
     if (! $user || ! Hash::check($request->password, $user->password)) {
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
         ]);
     }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'User Logged In Successfully',
+        'token' => $user->createToken("API TOKEN")->plainTextToken,
+        'user_id'=> $user->id,
+        'user_role'=> $user->role
+    ], 200);
  
-    return $user->createToken($request->device_name)->plainTextToken;
+    // return $user->createToken($request->device_name)->plainTextToken;
+    
 });
 // logout
 Route::post("/logout",function(Request $request){

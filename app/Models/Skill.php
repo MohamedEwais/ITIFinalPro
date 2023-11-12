@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Skill extends Model
 {
     use HasFactory;
@@ -14,4 +15,9 @@ class Skill extends Model
     {
         return $this->belongsToMany(User::class,"User");
     }
+    // public function skill()
+    // {
+    //     return $this->belongsTo(Skill::class, 'skill_id');
+    // }
 }
+
